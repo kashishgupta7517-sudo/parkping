@@ -2,7 +2,7 @@
    ParkPing — Application Logic
    =========================== */
 
-(function() {
+(function () {
     'use strict';
 
     // ===========================
@@ -19,6 +19,13 @@
             vehicle: '',
             email: '',
             phone: '9716549157'
+        },
+
+        // EmailJS Defaults
+        EMAILJS_DEFAULT: {
+            serviceId: 'service_vt2t6vh',
+            templateId: 'template_owcbjfv',
+            publicKey: 'r73yX6A55YSEuRl9N'
         },
 
         // QR Code settings
@@ -115,8 +122,8 @@
         $('#owner-email').value = data.email || '';
         $('#owner-phone').value = data.phone || '';
 
-        // Pre-fill EmailJS config
-        const emailjsConfig = getEmailJSConfig();
+        // Pre-fill EmailJS config (use saved or defaults)
+        const emailjsConfig = getEmailJSConfig() || CONFIG.EMAILJS_DEFAULT;
         if (emailjsConfig) {
             $('#emailjs-public-key').value = emailjsConfig.publicKey || '';
             $('#emailjs-service-id').value = emailjsConfig.serviceId || '';
@@ -335,7 +342,8 @@
         sendBtn.innerHTML = '<span class="spinner"></span> Sending...';
 
         const ownerData = getOwnerData();
-        const emailjsConfig = getEmailJSConfig();
+        // Use saved config or defaults
+        const emailjsConfig = getEmailJSConfig() || CONFIG.EMAILJS_DEFAULT;
 
         // Try EmailJS if configured
         if (emailjsConfig && emailjsConfig.publicKey && emailjsConfig.serviceId && emailjsConfig.templateId) {

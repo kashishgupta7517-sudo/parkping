@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkPing — EmailJS Setup Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a1a;
+            --card: rgba(20, 20, 50, 0.7);
+            --border: rgba(99, 102, 241, 0.15);
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --text: #f0f0ff;
+            --text-sec: #a0a0c0;
+            --text-muted: #606080;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            background-image: radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-sec);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-light);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: var(--text-sec);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .step a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .step a:hover {
+            text-decoration: underline;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none !important;
+            margin: 8px 0;
+            transition: 0.3s;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .template-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 12px 0;
+            position: relative;
+        }
+
+        .template-box pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 13px;
+            color: var(--text-sec);
+            line-height: 1.6;
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 14px;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--accent-light);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .copy-btn:hover {
+            background: rgba(99, 102, 241, 0.35);
+        }
+
+        .field-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .field-table th,
+        .field-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .field-table th {
+            color: var(--accent-light);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-table td:first-child {
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .field-table td:last-child {
+            color: var(--text-sec);
+        }
+
+        code {
+            background: rgba(99, 102, 241, 0.12);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--accent-light);
+            font-family: 'Consolas', monospace;
+        }
+
+        .note {
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--success);
+            margin: 16px 0;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .warn {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-sec);
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: var(--accent-light);
+        }
+
+        .time-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to ParkPing</a>
+        <div class="time-badge">⏱ Takes ~3 minutes</div>
+        <h1>Setup <span>EmailJS</span></h1>
+        <p class="subtitle">Follow these 4 steps to enable fully anonymous messaging — scanners will never see your
+            phone number or email.</p>
+
+        <!-- STEP 1 -->
+        <div class="step">
+            <div class="step-num">1</div>
+            <h2>Create a Free Account</h2>
+            <p>Go to EmailJS and sign up (free tier = 200 emails/month, more than enough for car contacts).</p>
+            <a href="https://dashboard.emailjs.com/sign-up" target="_blank" class="link-btn">
+                Sign Up on EmailJS →
+            </a>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+            <div class="step-num">2</div>
+            <h2>Add an Email Service</h2>
+            <p>After signing up, connect your email account (Gmail recommended):</p>
+            <ol style="color: var(--text-sec); font-size: 14px; margin-left: 18px; margin-top: 8px;">
+                <li>Go to <a href="https://dashboard.emailjs.com/admin" target="_blank">Email Services</a></li>
+                <li>Click <strong style="color: var(--text);">"Add New Service"</strong></li>
+                <li>Choose <strong style="color: var(--text);">Gmail</strong> (or your provider)</li>
+                <li>Click <strong style="color: var(--text);">"Connect Account"</strong> and sign in</li>
+                <li>Click <strong style="color: var(--text);">"Create Service"</strong></li>
+            </ol>
+            <div class="note">
+                <span>✅</span>
+                <span>Note down the <strong>Service ID</strong> (e.g., <code>service_abc123</code>). You'll need it in
+                    Step 4.</span>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+            <div class="step-num">3</div>
+            <h2>Create an Email Template</h2>
+            <p>Go to <a href="https://dashboard.emailjs.com/admin/templates" target="_blank">Email Templates</a> → Click
+                <strong>"Create New Template"</strong>.</p>
+
+            <p style="margin-top: 16px;"><strong style="color: var(--text);">Set these fields in the template
+                    editor:</strong></p>
+
+            <table class="field-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Subject</td>
+                        <td><code>🚗 ParkPing: Someone is trying to reach you about {{vehicle_number}}</code></td>
+                    </tr>
+                    <tr>
+                        <td>To Email</td>
+                        <td><code>{{to_email}}</code></td>
+                    </tr>
+                    <tr>
+                        <td>From Name</td>
+                        <td><code>ParkPing Alert</code></td>
+                    </tr>
+                    <tr>
+                        <td>Reply To</td>
+                        <td><em>(leave empty)</em></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="margin-top: 16px;"><strong style="color: var(--text);">Paste this into the Content (body)
+                    editor:</strong></p>
+            <div class="template-box">
+                <button class="copy-btn" onclick="copyTemplate()">📋 Copy</button>
+                <pre id="template-content">Hi {{owner_name}},
+
+Someone is trying to contact you about your vehicle.
+
+🚗 Vehicle: {{vehicle_number}}
+📋 Reason: {{reason}}
+
+👤 From: {{sender_name}}
+📞 Caller's Phone: {{sender_phone}}
+
+💬 Message:
+{{sender_message}}
+
+---
+This message was sent via ParkPing.
+Your phone number was NOT shared with the sender.</pre>
+            </div>
+
+            <div class="note">
+                <span>✅</span>
+                <span>Click <strong>"Save"</strong> and note the <strong>Template ID</strong> (e.g.,
+                    <code>template_xyz789</code>).</span>
+            </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="step">
+            <div class="step-num">4</div>
+            <h2>Get Your Public Key & Configure ParkPing</h2>
+            <p>Your Public Key is on the <a href="https://dashboard.emailjs.com/admin/account" target="_blank">Account
+                    page</a> → <strong>"Public Key"</strong> section.</p>
+
+            <p style="margin-top: 16px;"><strong style="color: var(--text);">Now enter all 3 values in
+                    ParkPing:</strong></p>
+            <ol style="color: var(--text-sec); font-size: 14px; margin-left: 18px; margin-top: 8px;">
+                <li>Open <a href="index.html">ParkPing</a></li>
+                <li>Expand <strong style="color: var(--text);">"EmailJS Configuration"</strong> (click the arrow)</li>
+                <li>Paste your <strong style="color: var(--text);">Public Key</strong>, <strong
+                        style="color: var(--text);">Service ID</strong>, and <strong
+                        style="color: var(--text);">Template ID</strong></li>
+                <li>Click <strong style="color: var(--text);">"Generate QR Code"</strong></li>
+            </ol>
+
+            <div class="note">
+                <span>🎉</span>
+                <span>That's it! Messages from scanners will now be <strong>emailed directly to you</strong>. Your phone
+                    number stays completely hidden.</span>
+            </div>
+        </div>
+
+        <div class="note warn">
+            <span>⚠️</span>
+            <span><strong>Hosting required:</strong> EmailJS works only on hosted pages (HTTPS). To use this feature,
+                upload your files to <a href="https://pages.github.com" target="_blank">GitHub Pages</a> (free) or <a
+                    href="https://netlify.com" target="_blank">Netlify</a> (free). Without hosting, the WhatsApp
+                fallback will still work perfectly.</span>
+        </div>
+    </div>
+
+    <script>
+        function copyTemplate() {
+            const text = document.getElementById('template-content').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy', 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkPing — Smart Car Contact</title>
+    <meta name="description" content="Scan to contact the car owner privately. No phone number revealed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ============ OWNER SETUP VIEW ============ -->
+    <div id="owner-view" class="view">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <h1>Park<span class="accent">Ping</span></h1>
+                </div>
+                <p class="tagline">Generate a QR code for your car. Let people reach you — without revealing your
+                    number.</p>
+            </div>
+
+            <!-- Setup Form -->
+            <div class="card setup-card">
+                <div class="card-header">
+                    <div class="step-badge">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                        </svg>
+                    </div>
+                    <h2>Your Details</h2>
+                </div>
+
+                <form id="setup-form">
+                    <div class="form-group">
+                        <label for="owner-name">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Your Name
+                        </label>
+                        <input type="text" id="owner-name" placeholder="e.g., Kashish Gupta" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vehicle-number">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13" rx="2" />
+                                <path d="m16 8 5 3-5 3z" />
+                            </svg>
+                            Vehicle Number
+                        </label>
+                        <input type="text" id="vehicle-number" placeholder="e.g., DL 01 AB 1234" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="owner-email">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                            Your Email <span class="hint">(notifications go here)</span>
+                        </label>
+                        <input type="email" id="owner-email" placeholder="you@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="owner-phone">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            Your Phone <span class="hint">(hidden from public)</span>
+                        </label>
+                        <input type="tel" id="owner-phone" placeholder="9876543210" required>
+                    </div>
+
+                    <!-- EmailJS Config (collapsible) -->
+                    <details class="emailjs-config">
+                        <summary>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="3" />
+                                <path
+                                    d="M12 1v6m0 6v6m11-7h-6m-6 0H1m15.36-5.36-4.24 4.24m-4.24-4.24L3.64 8.64m12.72 12.72-4.24-4.24m-4.24 4.24L3.64 15.36" />
+                            </svg>
+                            EmailJS Configuration <span class="hint">(for message relay)</span>
+                        </summary>
+                        <div class="config-fields">
+                            <p class="config-info">
+                                Messages from scanners are sent to your email via <a href="https://www.emailjs.com"
+                                    target="_blank">EmailJS</a> (free: 200/month).
+                                <a href="emailjs-setup.html" target="_blank">📋 Step-by-step setup guide →</a>
+                            </p>
+                            <div class="form-group">
+                                <label for="emailjs-public-key">Public Key</label>
+                                <input type="text" id="emailjs-public-key" placeholder="Your EmailJS public key">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailjs-service-id">Service ID</label>
+                                <input type="text" id="emailjs-service-id" placeholder="e.g., service_xxxxxxx">
+                            </div>
+                            <div class="form-group">
+                                <label for="emailjs-template-id">Template ID</label>
+                                <input type="text" id="emailjs-template-id" placeholder="e.g., template_xxxxxxx">
+                            </div>
+                        </div>
+                    </details>
+
+                    <button type="submit" class="btn btn-primary" id="generate-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect width="5" height="5" x="3" y="3" rx="1" />
+                            <rect width="5" height="5" x="16" y="3" rx="1" />
+                            <rect width="5" height="5" x="3" y="16" rx="1" />
+                            <path d="M21 16h-3a2 2 0 0 0-2 2v3" />
+                            <path d="M21 21v.01" />
+                            <path d="M12 7v3a2 2 0 0 1-2 2H7" />
+                            <path d="M3 12h.01" />
+                            <path d="M12 3h.01" />
+                            <path d="M12 16v.01" />
+                            <path d="M16 12h1" />
+                            <path d="M21 12v.01" />
+                            <path d="M12 21v-1" />
+                        </svg>
+                        Generate QR Code
+                    </button>
+                </form>
+            </div>
+
+            <!-- QR Code Display -->
+            <div class="card qr-card" id="qr-section" style="display:none;">
+                <div class="card-header">
+                    <div class="step-badge success">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                    </div>
+                    <h2>Your QR Code</h2>
+                </div>
+
+                <div class="qr-display">
+                    <div class="qr-frame">
+                        <div id="qrcode"></div>
+                    </div>
+                    <p class="qr-vehicle-label" id="qr-vehicle-label"></p>
+                    <p class="qr-instruction">Print this QR code and place it on your car's dashboard</p>
+                </div>
+
+                <div class="qr-actions">
+                    <button class="btn btn-secondary" id="download-qr-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" x2="12" y1="15" y2="3" />
+                        </svg>
+                        Download QR
+                    </button>
+                    <button class="btn btn-secondary" id="preview-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Preview Contact Page
+                    </button>
+                    <button class="btn btn-outline" id="reset-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                            <path d="M3 3v5h5" />
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+
+                <!-- Printable QR Card -->
+                <div class="print-card-section">
+                    <h3>🖨️ Print-Ready Card</h3>
+                    <p class="hint">Click "Download QR" above, then print and stick on your dashboard</p>
+                    <div class="print-preview" id="print-preview">
+                        <div class="print-card">
+                            <div class="print-card-top">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1"
+                                    stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                </svg>
+                                <span class="print-brand">ParkPing</span>
+                            </div>
+                            <div class="print-qr" id="print-qr"></div>
+                            <div class="print-text">
+                                <strong>Scan to Contact Owner</strong>
+                                <span id="print-vehicle"></span>
+                            </div>
+                            <div class="print-footer">No number revealed • Privacy first</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ PUBLIC CONTACT VIEW ============ -->
+    <div id="contact-view" class="view" style="display:none;">
+        <div class="container contact-container">
+            <!-- Animated Background Shapes -->
+            <div class="bg-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+
+            <div class="contact-header">
+                <div class="logo small-logo">
+                    <div class="logo-icon small">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </div>
+                    <span>Park<span class="accent">Ping</span></span>
+                </div>
+            </div>
+
+            <div class="card contact-card">
+                <!-- Vehicle Badge -->
+                <div class="vehicle-badge" id="contact-vehicle-badge">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C1.4 11.3 1 12.1 1 13v3c0 .6.4 1 1 1h2" />
+                        <circle cx="7" cy="17" r="2" />
+                        <path d="M9 17h6" />
+                        <circle cx="17" cy="17" r="2" />
+                    </svg>
+                    <span id="contact-vehicle-num">--</span>
+                </div>
+
+                <h2 class="contact-title">Need to reach the owner?</h2>
+                <p class="contact-subtitle">Send a message below. The owner will be notified privately.</p>
+
+                <!-- Call-to-action Chips -->
+                <div class="action-chips">
+                    <div class="chip" id="chip-blocked">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <line x1="12" x2="12" y1="9" y2="13" />
+                            <line x1="12" x2="12.01" y1="17" y2="17" />
+                        </svg>
+                        Car is blocking
+                    </div>
+                    <div class="chip" id="chip-lights">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+                            <path d="M9 18h6" />
+                            <path d="M10 22h4" />
+                        </svg>
+                        Lights are on
+                    </div>
+                    <div class="chip" id="chip-emergency">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                        </svg>
+                        Emergency
+                    </div>
+                    <div class="chip" id="chip-other">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                        Other
+                    </div>
+                </div>
+
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="sender-name">Your Name</label>
+                        <input type="text" id="sender-name" placeholder="Your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender-phone">Your Phone Number</label>
+                        <input type="tel" id="sender-phone" placeholder="So the owner can call back" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sender-message">Message</label>
+                        <textarea id="sender-message" rows="3" placeholder="What do you need to tell the owner?"
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-send" id="send-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="m22 2-7 20-4-9-9-4Z" />
+                            <path d="m22 2-11 11" />
+                        </svg>
+                        Send Message
+                    </button>
+                </form>
+
+                <!-- Success State -->
+                <div class="success-state" id="success-state" style="display:none;">
+                    <div class="success-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                    </div>
+                    <h3>Message Sent!</h3>
+                    <p>The car owner has been notified. They may call you back shortly.</p>
+                </div>
+            </div>
+
+            <div class="privacy-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                Owner's number is never revealed
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
